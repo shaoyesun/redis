@@ -14,6 +14,9 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
+/**
+ * 缓存工具类
+ */
 public class RedisCache implements Cache{
 
     private RedisTemplate<String, Object> redisTemplate;

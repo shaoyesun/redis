@@ -13,6 +13,9 @@
 //
 //import java.lang.reflect.Method;
 //
+///**
+// * 不需要配置文件的redis缓存机制的实现
+// */
 //@Configuration
 //@EnableCaching
 //public class RedisCacheConfig  extends CachingConfigurerSupport {

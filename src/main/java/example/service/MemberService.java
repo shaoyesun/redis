@@ -1,5 +1,7 @@
 package example.service;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -28,16 +30,12 @@ public class MemberService {
         member.setPassword("test0");
         member.setUsername("test0");
         Serializable id = memberDao.save(member);
-        memberDao.get(id);
-        Member member1 = new Member();
-        member1.setPassword("test1");
-        member1.setUsername("test1");
-        List<Member> list = new ArrayList<Member>();
-        list.add(member);
-        list.add(member1);
-        memberDao.saves(list);
-        return "success";
-        //return memberDao.save(member).toString();
+        return JSONObject.fromObject(memberDao.get(id)).toString();
+    }
+
+    public String update(Member member) {
+        Serializable id = memberDao.save(member);
+        return JSONObject.fromObject(memberDao.get(id)).toString();
     }
 
     public Member getOne(Long id) {

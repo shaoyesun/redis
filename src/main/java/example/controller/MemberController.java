@@ -17,7 +17,10 @@ import example.entity.Member;
 import example.service.MemberService;
 
 /**
- * 1.spring事务管理实现
+ * @缓存测试
+ * @ 1.缓存添加(@Cacheable)
+ * @ 2.缓存一致性(@CacheEvict @CachePut)
+ * @ 3.缓存key值重名(jpel)
  */
 @Controller
 @RequestMapping(value = "/member")
@@ -26,34 +29,38 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    //添加数据时清除缓存，保证数据的一致性
     @RequestMapping(value = "/save")
     @ResponseBody
-    @CacheEvict(value = "{findAll}")//清除缓存
-    //@CachePut(value = "{findAll}")//更新缓存
+    @CacheEvict(value = "common", key = "'class example.controller.MemberController.findAll'")//清除缓存
     public String save() {
         return memberService.save();
-    }
-
-    @RequestMapping(value = "/getOne")
-    @ResponseBody
-    @Cacheable(value = "common", key = "#root.targetClass + '.' + #root.methodName + '?id=' + #id")
-    //@CacheEvict(value = "common")
-    public String getOne(Long id) {
-        Member m = memberService.getOne(id);
-        return JSONObject.fromObject(m).toString();
     }
 
     @RequestMapping(value = "/findAll")
     @ResponseBody
     @Cacheable(value = "common", key = "#root.targetClass + '.' + #root.methodName")
-    //@CacheEvict(value="common", key = "'findAll'")
     public String findAll() {
         List<Member> list = memberService.findAll();
         return JSONArray.fromObject(list).toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(MemberController.class);
+    @RequestMapping(value = "/getOne")
+    @ResponseBody
+    @Cacheable(value = "common", key = "#root.targetClass + '.' + #root.methodName + '?id=' + #id")
+    public String getOne(Long id) {
+        Member m = memberService.getOne(id);
+        return JSONObject.fromObject(m).toString();
+    }
+
+    //更新数据时，更新缓存
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    @CachePut(value = "common", key = "'class example.controller.MemberController.getOne?id=' + #id")
+    public String update(Long id) {
+        Member m = memberService.getOne(id);
+        m.setUsername("test_update");
+        return JSONObject.fromObject(memberService.update(m)).toString();
     }
 
 }
