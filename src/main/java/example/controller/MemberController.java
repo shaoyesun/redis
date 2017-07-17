@@ -20,7 +20,7 @@ import example.service.MemberService;
  * @缓存测试
  * @ 1.缓存添加(@Cacheable)
  * @ 2.缓存一致性(@CacheEvict @CachePut)
- * @ 3.缓存key值重名(jpel)
+ * @ 3.缓存key值重名(SpEL)
  */
 @Controller
 @RequestMapping(value = "/member")
